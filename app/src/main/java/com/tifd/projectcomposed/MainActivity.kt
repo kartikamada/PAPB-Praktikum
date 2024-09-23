@@ -1,9 +1,11 @@
 package com.tifd.projectcomposed
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +31,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,7 +39,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -68,6 +73,12 @@ fun MyScreen() {
     var nimText by remember { mutableStateOf("") }
     var inputNim by remember { mutableStateOf("") }
     var showCheck by remember { mutableStateOf(false) }
+
+    val isFormValid by remember(inputText, inputNim) {
+        derivedStateOf { inputText.isNotBlank() && inputNim.isNotBlank() }
+    }
+
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -127,8 +138,13 @@ fun MyScreen() {
                 Spacer(modifier = Modifier.width(8.dp))
                 TextField(
                     value = inputText,
-                    onValueChange = { inputText = it },
-                    label = { Text("MASUKKAN NAMA", color = Color.White) },
+                    onValueChange = { newText ->
+                        // Hanya menerima huruf dan spasi
+                        if (newText.all { it.isLetter() || it.isWhitespace() }) {
+                            inputText = newText
+                        }
+                    },
+                    label = { Text("INPUT NAMA", color = Color.White) },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
@@ -168,7 +184,7 @@ fun MyScreen() {
                             inputNim = it
                         }
                     },
-                    label = { Text("MASUKKAN NIM (number only)", color = Color.White) },
+                    label = { Text("INPUT NIM (number only)", color = Color.White) },
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
@@ -194,18 +210,29 @@ fun MyScreen() {
                     nimText = inputNim
                     showCheck = true
                 },
+                enabled = isFormValid,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = Color(0xFFBFD2EA)
+                    containerColor = if (isFormValid) Color.White else Color.Gray,
+                    contentColor = if (isFormValid) Color(0xFFBFD2EA) else Color.DarkGray
                 ),
                 modifier = Modifier
                     .padding(16.dp)
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onLongPress = {
+                                if (isFormValid) {
+                                    val message = "Name: $inputText\nNIM: $inputNim"
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        )
+                    }
             ) {
                 if (showCheck) {
                     Icon(
                         imageVector = Icons.Filled.Check,
                         contentDescription = "Check Icon",
-                        tint = Color(0xFFBFD2EA),
+                        tint = if (isFormValid) Color(0xFFBFD2EA) else Color.DarkGray,
                         modifier = Modifier.size(24.dp)
                     )
                 } else {
