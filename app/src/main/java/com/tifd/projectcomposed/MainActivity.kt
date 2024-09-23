@@ -139,7 +139,6 @@ fun MyScreen() {
                 TextField(
                     value = inputText,
                     onValueChange = { newText ->
-                        // Hanya menerima huruf dan spasi
                         if (newText.all { it.isLetter() || it.isWhitespace() }) {
                             inputText = newText
                         }
