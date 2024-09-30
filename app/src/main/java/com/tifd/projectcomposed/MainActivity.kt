@@ -1,55 +1,32 @@
 package com.tifd.projectcomposed
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tifd.projectcomposed.ui.theme.ProjectComposeDTheme
-import com.tifd.projectcomposed.R
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +36,14 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    MyScreen()
+                    HomeScreen(
+                        onSignInClick = {
+                            startActivity(Intent(this, SignInActivity::class.java))
+                        },
+                        onCreateAccountClick = {
+                            startActivity(Intent(this, CreateAccountActivity::class.java))
+                        }
+                    )
                 }
             }
         }
@@ -67,19 +51,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyScreen() {
-    var text by remember { mutableStateOf("") }
-    var inputText by remember { mutableStateOf("") }
-    var nimText by remember { mutableStateOf("") }
-    var inputNim by remember { mutableStateOf("") }
-    var showCheck by remember { mutableStateOf(false) }
-
-    val isFormValid by remember(inputText, inputNim) {
-        derivedStateOf { inputText.isNotBlank() && inputNim.isNotBlank() }
-    }
-
-    val context = LocalContext.current
-
+fun HomeScreen(onSignInClick: () -> Unit, onCreateAccountClick: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -97,166 +69,30 @@ fun MyScreen() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "HI!",
-                color = Color.White,
-                style = TextStyle(
-                    fontSize = 60.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = " $text",
-                color = Color.White,
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = " $nimText",
-                color = Color.White,
-                style = TextStyle(fontSize = 20.sp)
-            )
+            CustomButton("Sign In", onClick = onSignInClick)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = "Icon Profile",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(45.dp)
-                        .padding(start = 10.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                TextField(
-                    value = inputText,
-                    onValueChange = { newText ->
-                        if (newText.all { it.isLetter() || it.isWhitespace() }) {
-                            inputText = newText
-                        }
-                    },
-                    label = { Text("INPUT NAMA", color = Color.White) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    shape = RoundedCornerShape(26.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.White.copy(alpha = 0.38f),
-                        unfocusedContainerColor = Color.White.copy(alpha = 0.5f),
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        cursorColor = Color.White,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
-                )
-            }
+            CustomButton("Sign Up", onClick = onCreateAccountClick)
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Info,
-                    contentDescription = "Icon NIM",
-                    tint = Color.White,
-                    modifier = Modifier
-                        .size(45.dp)
-                        .padding(start = 10.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                TextField(
-                    value = inputNim,
-                    onValueChange = {
-                        if (it.all { char -> char.isDigit() }) {
-                            inputNim = it
-                        }
-                    },
-                    label = { Text("INPUT NIM (number only)", color = Color.White) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    shape = RoundedCornerShape(26.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.White.copy(alpha = 0.38f),
-                        unfocusedContainerColor = Color.White.copy(alpha = 0.5f),
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        cursorColor = Color.White,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    text = inputText
-                    nimText = inputNim
-                    showCheck = true
-                },
-                enabled = isFormValid,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isFormValid) Color.White else Color.Gray,
-                    contentColor = if (isFormValid) Color(0xFFBFD2EA) else Color.DarkGray
-                ),
-                modifier = Modifier
-                    .padding(16.dp)
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onLongPress = {
-                                if (isFormValid) {
-                                    val message = "Name: $inputText\nNIM: $inputNim"
-                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        )
-                    }
-            ) {
-                if (showCheck) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = "Check Icon",
-                        tint = if (isFormValid) Color(0xFFBFD2EA) else Color.DarkGray,
-                        modifier = Modifier.size(24.dp)
-                    )
-                } else {
-                    Text(
-                        text = "Submit",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-
-            if (showCheck) {
-                LaunchedEffect(Unit) {
-                    kotlinx.coroutines.delay(140)
-                    showCheck = false
-                }
-            }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    ProjectComposeDTheme {
-        MyScreen()
+fun CustomButton(buttonText: String, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.White,
+            contentColor = Color(0xFFA5B6FD)
+        ),
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Text(
+            text = buttonText,
+            fontSize = 24.sp,
+        )
     }
 }
