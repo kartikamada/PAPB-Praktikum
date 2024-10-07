@@ -62,7 +62,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -83,38 +82,15 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
-    implementation ("com.google.firebase:firebase-auth:23.0.0")
-    implementation ("com.google.firebase:firebase-auth-ktx:23.0.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
-    implementation("androidx.navigation:navigation-compose:2.7.0")
-    implementation ("com.google.code.gson:gson:2.10.1")
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("io.coil-kt:coil-compose:2.4.0")
-    implementation("io.coil-kt:coil:2.4.0")
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-
-    // Retrofit dependency
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-
-    // Gson Converter dependency
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    // Kotlin Coroutines
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-
-    // Logging Interceptor (opsional, berguna untuk debugging)
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
-
-    // Lifecycle (jika Anda menggunakan ViewModel atau LiveData)
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
 
     implementation(platform("com.google.firebase:firebase-bom:33.3.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore")
+
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
 
 }

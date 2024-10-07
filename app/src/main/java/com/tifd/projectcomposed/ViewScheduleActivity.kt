@@ -66,7 +66,12 @@ fun ViewScheduleScreen(onLogout: () -> Unit) {
             }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().clickable {
+        val intent = Intent(context, GithubProfile::class.java)
+        context.startActivity(intent)
+        Toast.makeText(context, "Navigating to GitHub Profile", Toast.LENGTH_SHORT).show()
+    }
+    ){
         Image(
             painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -78,11 +83,6 @@ fun ViewScheduleScreen(onLogout: () -> Unit) {
                 .size(100.dp)
                 .padding(16.dp)
                 .align(Alignment.TopEnd)
-                .clickable {
-                    val intent = Intent(context, GithubProfile::class.java)
-                    context.startActivity(intent)
-                    Toast.makeText(context, "Navigating to GitHub Profile", Toast.LENGTH_SHORT).show()
-                }
         )
 
         Column(
