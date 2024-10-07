@@ -2,19 +2,24 @@ package com.tifd.projectcomposed
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.layout.ContentScale
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -42,6 +47,7 @@ class ViewScheduleActivity : ComponentActivity() {
 fun ViewScheduleScreen(onLogout: () -> Unit) {
     val firestore = FirebaseFirestore.getInstance()
     var scheduleList by remember { mutableStateOf(listOf<List<String>>()) }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         firestore.collection("schedules")
@@ -62,30 +68,30 @@ fun ViewScheduleScreen(onLogout: () -> Unit) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = R.drawable.wallpaper),
-            contentDescription = "Background Image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+            painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data("https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png")
+                    .build()
+            ),
+            contentDescription = null,
+            modifier = Modifier
+                .size(100.dp)
+                .padding(16.dp)
+                .align(Alignment.TopEnd)
+                .clickable {
+                    val intent = Intent(context, GithubProfile::class.java)
+                    context.startActivity(intent)
+                    Toast.makeText(context, "Navigating to GitHub Profile", Toast.LENGTH_SHORT).show()
+                }
         )
 
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth()
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(top = 70.dp)
         ) {
-            Button(
-                onClick = onLogout,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
-                    contentColor = Color(0xFFA5B6FD)
-                ),
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(8.dp)
-            ) {
-                Text("Logout")
-            }
-
             scheduleList.forEach { row ->
                 ElevatedCard(
                     elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
@@ -113,6 +119,20 @@ fun ViewScheduleScreen(onLogout: () -> Unit) {
                         }
                     }
                 }
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = onLogout,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color(0xFFA5B6FD)
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                Text("Logout")
             }
         }
     }

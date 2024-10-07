@@ -5,4 +5,5 @@
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="title_activity_create_account">CreateAccountActivity</string>
     <string name="title_activity_view_schedule">ViewScheduleActivity</string>
+    <string name="title_activity_github_profile">GithubProfile</string>
 </resources>
