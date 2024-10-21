@@ -125,7 +125,7 @@ fun SignInScreen(firebaseAnalytics: FirebaseAnalytics, auth: FirebaseAuth) {
                                 Log.d("Login", "signInWithEmail:success")
                                 val user = auth.currentUser
                                 Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
-                                val intent = Intent(context, ViewScheduleActivity::class.java)
+                                val intent = Intent(context, MainActivity::class.java)
                                 context.startActivity(intent)
 
                                 context.finish()

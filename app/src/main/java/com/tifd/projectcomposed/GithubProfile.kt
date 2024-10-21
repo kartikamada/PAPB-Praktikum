@@ -20,6 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.clickable
+import com.tifd.projectcomposed.screen.ProfileScreen
 
 class GithubProfile : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,89 +31,10 @@ class GithubProfile : ComponentActivity() {
         setContent {
             ProjectComposeDTheme {
                 Surface {
-                    GithubProfileScreen()
+                    ProfileScreen()
                 }
             }
         }
     }
 }
 
-@Composable
-fun GithubProfileScreen(viewModel: MainViewModel = viewModel()) {
-    val user by viewModel.user.collectAsState()
-    val errorMessage by viewModel.error.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.getProfileUser("kartikamada")
-    }
-
-    Scaffold { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentAlignment = Alignment.Center
-        ) {
-            when {
-                isLoading -> {
-                    CircularProgressIndicator()
-                }
-                errorMessage != null -> {
-                    Text(
-                        text = "Error: $errorMessage",
-                        color = MaterialTheme.colorScheme.error,
-                        fontSize = 18.sp
-                    )
-                }
-                user != null -> {
-                    DetailContent(user = user!!)
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun DetailContent(user: Profile) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(18.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(18.dp)
-    ) {
-        AsyncImage(
-            model = user.avatarUrl,
-            contentDescription = "User Avatar",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(150.dp)
-                .clip(CircleShape)
-        )
-        Text(
-            text = user.name,
-            fontWeight = FontWeight.ExtraBold,
-            fontSize = 20.sp
-        )
-        Text(
-            text = user.login,
-            fontWeight = FontWeight.Light,
-            fontSize = 18.sp
-        )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(32.dp)
-        ) {
-            Text(
-                text = "Followers: ${user.followers}",
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp
-            )
-            Text(
-                text = "Following: ${user.followingCount}",
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp
-            )
-        }
-    }
-}

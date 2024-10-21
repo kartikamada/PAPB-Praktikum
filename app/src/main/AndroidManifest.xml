@@ -19,7 +19,7 @@
             android:label="@string/title_activity_github_profile"
             android:theme="@style/Theme.ProjectComposeD" />
         <activity
-            android:name=".ViewScheduleActivity"
+            android:name=".MainActivity"
             android:exported="false"
             android:label="@string/title_activity_view_schedule"
             android:theme="@style/Theme.ProjectComposeD" />
@@ -34,10 +34,7 @@
             android:label="@string/title_activity_sign_in"
             android:theme="@style/Theme.ProjectComposeD" />
         <activity
-            android:name=".MainActivity2"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".AuthActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ProjectComposeD">

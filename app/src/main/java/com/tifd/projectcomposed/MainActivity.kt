@@ -1,98 +1,117 @@
 package com.tifd.projectcomposed
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.tifd.projectcomposed.navigation.NavigationItem
+import com.tifd.projectcomposed.navigation.Screen
+import com.tifd.projectcomposed.screen.ProfileScreen
+import com.tifd.projectcomposed.screen.ScheduleScreen
+import com.tifd.projectcomposed.screen.TaskScreen
 import com.tifd.projectcomposed.ui.theme.ProjectComposeDTheme
 
-
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ProjectComposeDTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    HomeScreen(
-                        onSignInClick = {
-                            startActivity(Intent(this, SignInActivity::class.java))
-                        },
-                        onCreateAccountClick = {
-                            startActivity(Intent(this, CreateAccountActivity::class.java))
-                        }
-                    )
-                }
+            MainActivityContent()
+        }
+    }
+}
+
+@Composable
+fun MainActivityContent(
+    navController: NavHostController = rememberNavController(),
+    modifier: Modifier = Modifier,
+) {
+    Scaffold(
+        bottomBar = {
+            BottomBar(navController)
+        },
+        modifier = modifier,
+    ) { innerPadding ->
+        NavHost (
+            navController = navController,
+            startDestination = Screen.Schedule.route,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(Screen.Schedule.route) {
+                ScheduleScreen()
+            }
+            composable(Screen.Task.route) {
+                TaskScreen()
+            }
+            composable(Screen.Profile.route) {
+                ProfileScreen()
             }
         }
     }
 }
 
 @Composable
-fun HomeScreen(onSignInClick: () -> Unit, onCreateAccountClick: () -> Unit) {
-    Box(
-        modifier = Modifier.fillMaxSize()
+private fun BottomBar(
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
+    NavigationBar (
+        modifier = modifier
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.wallpaper),
-            contentDescription = "Background Image",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
+        val navigationItems = listOf(
+            NavigationItem(
+                title = stringResource(R.string.schedule),
+                icon = Icons.Default.Home,
+                screen = Screen.Schedule,
+            ),
+            NavigationItem(
+                title = stringResource(R.string.task),
+                icon = Icons.Default.Favorite,
+                screen = Screen.Task,
+            ),
+            NavigationItem(
+                title = stringResource(R.string.profile),
+                icon = Icons.Default.Person,
+                screen = Screen.Profile,
+            ),
         )
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CustomButton("Sign In", onClick = onSignInClick)
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CustomButton("Sign Up", onClick = onCreateAccountClick)
-
-            Spacer(modifier = Modifier.height(16.dp))
+        navigationItems.map {
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        imageVector = it.icon,
+                        contentDescription = it.title
+                    )
+                },
+                label = {
+                    Text(it.title)
+                },
+                selected = false,
+                onClick = {
+                    navController.navigate(it.screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        restoreState = true
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
-    }
-}
-
-@Composable
-fun CustomButton(buttonText: String, onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color(0xFFA5B6FD)
-        ),
-        modifier = Modifier.padding(16.dp)
-    ) {
-        Text(
-            text = buttonText,
-            fontSize = 24.sp,
-        )
     }
 }

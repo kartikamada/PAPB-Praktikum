@@ -6,4 +6,7 @@
     <string name="title_activity_create_account">CreateAccountActivity</string>
     <string name="title_activity_view_schedule">ViewScheduleActivity</string>
     <string name="title_activity_github_profile">GithubProfile</string>
+    <string name="schedule">Mata Kuliah</string>
+    <string name="task">Tugas</string>
+    <string name="profile">Profil</string>
 </resources>
