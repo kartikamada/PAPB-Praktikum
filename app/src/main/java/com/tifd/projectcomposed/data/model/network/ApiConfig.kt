@@ -1,10 +1,11 @@
-package com.tifd.projectcomposed
+package com.tifd.projectcomposed.data.model.network
+import com.tifd.projectcomposed.BuildConfig
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Retrofit;
 
     public class ApiConfig {
         companion object{
-            fun getApiService():APIService{
+            fun getApiService(): APIService {
                 val retrofit = Retrofit.Builder()
                     .baseUrl(BuildConfig.BASE_URL_GITHUB)
                     .addConverterFactory(GsonConverterFactory.create())

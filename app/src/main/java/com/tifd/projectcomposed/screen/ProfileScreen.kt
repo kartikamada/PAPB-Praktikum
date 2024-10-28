@@ -23,13 +23,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.tifd.projectcomposed.Profile
-import com.tifd.projectcomposed.viewmodel.ProfileViewModel
+import com.tifd.projectcomposed.data.model.network.Profile
+import com.tifd.projectcomposed.viewmodel.MainViewModel
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = viewModel(),
+    viewModel: MainViewModel = viewModel(),
 ) {
     val user by viewModel.user.collectAsStateWithLifecycle()
     val activity = LocalContext.current as Activity

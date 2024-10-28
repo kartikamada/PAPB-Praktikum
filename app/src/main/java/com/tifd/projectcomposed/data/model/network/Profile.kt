@@ -1,4 +1,4 @@
-package com.tifd.projectcomposed
+package com.tifd.projectcomposed.data.model.network
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,5 +1,6 @@
 package com.tifd.projectcomposed
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHost
@@ -19,28 +21,33 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.tifd.projectcomposed.data.model.local.TaskRepository
 import com.tifd.projectcomposed.navigation.NavigationItem
 import com.tifd.projectcomposed.navigation.Screen
 import com.tifd.projectcomposed.screen.ProfileScreen
 import com.tifd.projectcomposed.screen.ScheduleScreen
 import com.tifd.projectcomposed.screen.TaskScreen
 import com.tifd.projectcomposed.ui.theme.ProjectComposeDTheme
+import com.tifd.projectcomposed.viewmodel.MainViewModel
+import com.tifd.projectcomposed.viewmodel.MainViewModelFactory
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainActivityContent()
+            MainActivityContent(application)
         }
     }
 }
 
 @Composable
 fun MainActivityContent(
+    application: Application,
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
 ) {
+    val mainViewModel: MainViewModel = viewModel(factory = MainViewModelFactory(application))
+
     Scaffold(
         bottomBar = {
             BottomBar(navController)
@@ -56,10 +63,10 @@ fun MainActivityContent(
                 ScheduleScreen()
             }
             composable(Screen.Task.route) {
-                TaskScreen()
+                TaskScreen(viewModel = mainViewModel)
             }
             composable(Screen.Profile.route) {
-                ProfileScreen()
+                ProfileScreen(viewModel = mainViewModel)
             }
         }
     }
