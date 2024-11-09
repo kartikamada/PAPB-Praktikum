@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.tifd.projectcomposed.data.model.local.TaskRepository
 import com.tifd.projectcomposed.navigation.NavigationItem
 import com.tifd.projectcomposed.navigation.Screen
+import com.tifd.projectcomposed.screen.CameraScreen
 import com.tifd.projectcomposed.screen.ProfileScreen
 import com.tifd.projectcomposed.screen.ScheduleScreen
 import com.tifd.projectcomposed.screen.TaskScreen
@@ -63,10 +64,13 @@ fun MainActivityContent(
                 ScheduleScreen()
             }
             composable(Screen.Task.route) {
-                TaskScreen(viewModel = mainViewModel)
+                TaskScreen(navController = navController, viewModel = mainViewModel)
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(viewModel = mainViewModel)
+            }
+            composable(Screen.Camera.route) {
+                CameraScreen(navController = navController)
             }
         }
     }

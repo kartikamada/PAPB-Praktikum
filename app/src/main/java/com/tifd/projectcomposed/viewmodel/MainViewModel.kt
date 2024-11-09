@@ -1,5 +1,6 @@
 package com.tifd.projectcomposed.viewmodel
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,8 +37,8 @@ class MainViewModel(application: Application) : ViewModel() {
         }
     }
 
-    fun addTask(subject: String, taskDetails: String) {
-        val task = Task(subject = subject, taskDetails = taskDetails)
+    fun addTask(subject: String, taskDetails: String, imageUri: Uri?) {
+        val task = Task(subject = subject, taskDetails = taskDetails, imageUri = imageUri)
         viewModelScope.launch {
             taskRepository.insertTask(task)
         }

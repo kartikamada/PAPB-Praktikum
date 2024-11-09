@@ -1,5 +1,6 @@
 package com.tifd.projectcomposed.data.model.local
 
+import android.net.Uri
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -21,4 +22,8 @@ class Task (
 
     @ColumnInfo(name = "done")
     var done: Boolean = false,
+
+    // Store as String in database
+    @ColumnInfo(name = "image_uri")
+    var imageUri: Uri? = null,
 ) : Parcelable
